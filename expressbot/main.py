@@ -4,6 +4,7 @@
 # Telegram message handle function.
 __author__ = 'Benny <benny@bennythink.com>'
 __credits__ = 'ヨイツの賢狼ホロ <horo@yoitsu.moe>'
+__version__ = '1.0.1'
 
 import telebot
 
@@ -16,10 +17,10 @@ TOKEN = os.environ.get('TOKEN')
 TURING_KEY = os.environ.get('TURING_KEY')
 DEBUG = os.environ.get('DEBUG')
 if not (TOKEN and TURING_KEY and DEBUG):
-    print 'using config file'
+    print('main: using config file')
     from config import TOKEN, TURING_KEY, DEBUG
 else:
-    print 'using environ'
+    print 'main:using environ'
 bot = telebot.TeleBot(TOKEN)
 
 

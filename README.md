@@ -179,6 +179,8 @@ sudo systemctl stop expressbot.service
 - [ ] 下载Google Play应用
 - [ ] 添加测试用例
 - [ ] Google搜索
+- [ ] 单消息多单号处理
+- [ ] 接入电商
 
 ## bug fix ##
 * `db.py`中数据库路径的处理方式，在执行计划任务的时候，会导致使用根目录下的`bot.db`，所以目前暂时使用绝对路径；
@@ -188,6 +190,6 @@ sudo systemctl stop expressbot.service
 ```
 捕获一下就可以了。
 比较好的解决方式：在配置文件中指定数据库（项目）路径
-
+* 带字母的单号
 ## License ##
 GPL v2
