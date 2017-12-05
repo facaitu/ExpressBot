@@ -24,10 +24,22 @@ else:
 bot = telebot.TeleBot(TOKEN)
 
 
+# TODO: Do I need to refactor `send_chat_action`?
 @bot.message_handler(commands=['start'])
 def bot_help(message):
-    bot.send_chat_action(message.chat.id, 'typing')
-    bot.send_message(message.chat.id, '直接把运单号告诉咱就好啦 ~')
+    if message.text == '/start':
+        bot.send_chat_action(message.chat.id, 'typing')
+        bot.send_message(message.chat.id, '直接把运单号告诉咱就好啦 ~')
+    elif message.text.index(','):
+        msg = message.text.split()[1].split(',')
+        for item_tid in msg:
+            bot.send_chat_action(message.chat.id, 'typing')
+            r = kuaidi100.recv(item_tid, message.message_id, message.chat.id)
+            bot.send_message(message.chat.id, r)
+    else:
+        bot.send_chat_action(message.chat.id, 'typing')
+        r = kuaidi100.recv(message.text.split()[1], message.message_id, message.chat.id)
+        bot.send_message(message.chat.id, r)
 
 
 @bot.message_handler(commands=['help'])
@@ -35,6 +47,10 @@ def bot_help(message):
     bot.send_chat_action(message.chat.id, 'typing')
     bot.send_message(message.chat.id,
                      "咱能帮汝查询快（shuǐ）递（biǎo）信息啦~ 有问题的话就去 @BennyThink 呗。")
+    bot.send_message(message.chat.id,
+                     "直接发送运单编号即可查询（并添加到追踪中）；\
+                     如果汝的单号带有字母，请使用/start danhao123；\
+                     如果汝需要一次性追踪多个单号，请/start 123,1234，使用英文半角逗号分隔。")
 
 
 @bot.message_handler(commands=['list'])
@@ -82,6 +98,7 @@ def track_express(message):
     :param message: Telegram message sent by user.
     :return: None
     """
+    # parse multiple track_id
     if message.text.isdigit():
         bot.send_chat_action(message.chat.id, 'typing')
         r = kuaidi100.recv(message.text, message.message_id, message.chat.id)
