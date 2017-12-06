@@ -100,6 +100,7 @@ pip3 install -r requirements.txt
 ```
 
 ### 配置 ###
+**为了方便更新，其实是推荐在环境变量中设置的**
 修改`config.py`进行配置，TOKEN为Bot的API，TURING_KEY若不配置则不启用机器人功能，DEBUG为设置是否在控制台输出debug信息，0为不输出；`DB_PATH`为数据库文件的绝对路径
 
 ```
