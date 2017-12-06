@@ -48,7 +48,7 @@ johnpoint：反正我这边没有成功过
 ```
 
 
-## 部署方法1.自动脚本（配置文件模式0 ##
+## 部署方法1.自动脚本（配置文件模式) ##
 
 一键脚本只支持Python 2，已经在Ubuntu 16.04、CentOS 7、Debian 9的64位版本上测试通过：
 
@@ -112,12 +112,12 @@ DEBUG = 0
 备注：
 systemd无法直接使用`.bashrc`等文件的环境变量，第一种方法是编辑对应的service配置文件：
 ```[Service]
-Environment="PATH=/usr/lib/ccache/bin:/usr/local/bin:/usr/bin:/bin"
-Environment="EDITOR=nano -c"
-Environment="BROWSER=firefox"
-Environment="NO_AT_BRIDGE=1"
+Environment="TOKEN=12345"
+Environment="DBPATH=/home/ExpressBot/expressbot/bot.db"
+Environment="TURING_KEY=111111"
+Environment="DEBUG=0"
 ```
-第二种是运行`systemctl --user import-environment`导入，运行`systemctl --user show-environment`查看，我还没测试呢，哈哈哈。
+第二种是运行`systemctl --user import-environment`导入，运行`systemctl --user show-environment`查看。
 更多资料参考[Arch Linux Systemd wiki](https://wiki.archlinux.org/index.php/Systemd/User#Environment_variables)
 
 ### 运行 ###
@@ -200,6 +200,7 @@ sudo systemctl stop expressbot.service
 - [ ] 接入电商：还是想都别想吧
 - [ ] 是否需要重构`send_chat_action`来达到代码复用的目的
 - [ ] 有时会收到重复消息，原因未知
+- [ ] 一键脚本支持环境变量安装模式
 
 ## bug fix ##
 - [x] `db.py`中数据库路径的处理方式，在执行计划任务的时候，会导致使用根目录下的`bot.db`，所以目前暂时使用绝对路径；

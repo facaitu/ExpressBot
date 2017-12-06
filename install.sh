@@ -121,7 +121,7 @@ fi
 
 install_service(){
 check_systemd
-cp expressbot.service /lib/systemd/system/expressbot.service
+cp expressbot.config.service /lib/systemd/system/expressbot.service
 systemctl daemon-reload
 systemctl enable expressbot.service
 }
