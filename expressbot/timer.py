@@ -31,8 +31,7 @@ def cron(code, mid, cid, db_content):
 
     if db_content not in r:
         try:
-            print 'here'
-            print bot.send_message(chat_id=cid, reply_to_message_id=mid, text=r)
+            bot.send_message(chat_id=cid, reply_to_message_id=mid, text=r)
         except telebot.apihelper.ApiException as e:
             print(e.message)
 
