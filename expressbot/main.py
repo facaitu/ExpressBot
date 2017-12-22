@@ -16,6 +16,7 @@ from msg import msg_logger
 import speech
 import requests
 import db
+import time
 
 TOKEN = os.environ.get('TOKEN') or config.TOKEN
 TURING_KEY = os.environ.get('TURING_KEY') or config.TURING_KEY
@@ -59,8 +60,11 @@ def bot_list(message):
     if all_info:
         for i in all_info:
             bot.send_chat_action(message.chat.id, 'typing')
+
+            # print type(i[2])
+
             bot.send_message(
-                message.chat.id, i[0] + ' ' + i[1] + '\n' + i[2] + i[3])
+                message.chat.id, i[0] + '  ' + i[1] + '\n' + i[2] + i[3])
     else:
         bot.send_chat_action(message.chat.id, 'typing')
         bot.send_message(message.chat.id, '--o(*￣▽￣*)o--\n诶汝有问过咱嘛？')
@@ -102,27 +106,34 @@ def track_express(message):
         temp = os.environ.get('TMP')
     else:
         temp = '/tmp'
+
     if message.voice:
+        bot.send_chat_action(message.chat.id, 'record_audio')
         # download the file
         file_info = bot.get_file(message.voice.file_id)
         voice_file = requests.get('https://api.telegram.org/file/bot{0}/{1}'.format(TOKEN, file_info.file_path))
         file_path = temp + os.sep
         with open(file_path + message.voice.file_id + '.ogg', 'wb') as f:
             f.write(voice_file.content)
-
         message.text = speech.voice_to_text(file_path, message.voice.file_id + '.ogg')
 
-    if message.text.isdigit():
+    if u'4C7' in message.text:
+        bot.send_chat_action(message.chat.id, 'typing')
+        r = utils.reply_refuse()
+        bot.send_message(message.chat.id, r)
+        return r
+    elif message.text.isdigit():
         bot.send_chat_action(message.chat.id, 'typing')
         r = kuaidi100.recv(message.text, message.message_id, message.chat.id)
 
         if u'单号不存在或者已经过期' in r:
             bot.send_message(message.chat.id, '汝的单号可能刚刚生成，暂无信息，已经加入到任务队列中')
-            sql_cmd = "INSERT INTO job VALUES (NULL ,?,?,?,? ,NULL ,NULL ,NULL ,0)"
+            sql_cmd = "INSERT INTO job VALUES (NULL ,?,?,?,? ,'刚刚录入耶' ,'Started',?,0)"
 
             db.upsert(sql_cmd,
                       (message.message_id, message.chat.id,
-                       kuaidi100.auto_detect(message.text)[0], message.text))
+                       kuaidi100.auto_detect(message.text)[0], message.text,
+                       time.strftime("%Y-%m-%d %H:%M:%S")))
         else:
             bot.send_message(message.chat.id, r)
     # use turing bot

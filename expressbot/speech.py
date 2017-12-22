@@ -9,7 +9,6 @@ __author__ = 'Benny <benny@bennythink.com>'
 
 from pydub import AudioSegment
 import speech_recognition as sr
-import utils
 
 
 def convert(ogg_path, ogg_name):
@@ -28,10 +27,9 @@ def recognition(wav_file):
         return r.recognize_google(audio, language='cmn-Hans-CN')
 
     except sr.UnknownValueError:
-        return utils.reply_refuse()
+        return "Google Speech Recognition could not understand audio.4C7"
     except sr.RequestError as e:
-        print("Could not request results from Google Speech Recognition service; {0}".format(e))
-        return utils.reply_not_found()
+        return "Could not request results from Google Speech Recognition service.4C7; {0}".format(e)
 
 
 def voice_to_text(ogg_path, ogg_name):
