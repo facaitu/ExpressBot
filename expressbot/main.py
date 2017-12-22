@@ -141,6 +141,8 @@ def cron(code, mid, cid, db_content):
     :return: None
     """
     r = kuaidi100.recv(code, mid, cid)
+    print('db: ' + db_content)
+    print('real: ' + r)
     if db_content not in r:
         try:
             bot.send_message(chat_id=cid, reply_to_message_id=mid, text=r)
