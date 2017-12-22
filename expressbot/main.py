@@ -4,7 +4,7 @@
 # Telegram message handle function.
 __author__ = 'Benny <benny@bennythink.com>'
 __credits__ = 'ヨイツの賢狼ホロ <horo@yoitsu.moe>'
-__version__ = '1.1.0'
+__version__ = '1.1.1'
 
 import telebot
 import kuaidi100
@@ -15,6 +15,7 @@ import config
 from msg import msg_logger
 import speech
 import requests
+import db
 
 TOKEN = os.environ.get('TOKEN') or config.TOKEN
 TURING_KEY = os.environ.get('TURING_KEY') or config.TURING_KEY
@@ -89,7 +90,6 @@ def bot_quick_delete(message):
         bot.send_message(message.chat.id, msg)
 
 
-# TODO: Privacy mode enabled in group: talk to the bot start with a / or bot admin.
 @bot.message_handler(content_types=['text', 'voice'])
 @msg_logger
 def track_express(message):
@@ -115,7 +115,16 @@ def track_express(message):
     if message.text.isdigit():
         bot.send_chat_action(message.chat.id, 'typing')
         r = kuaidi100.recv(message.text, message.message_id, message.chat.id)
-        bot.send_message(message.chat.id, r)
+
+        if u'单号不存在或者已经过期' in r:
+            bot.send_message(message.chat.id, '汝的单号可能刚刚生成，暂无信息，已经加入到任务队列中')
+            sql_cmd = "INSERT INTO job VALUES (NULL ,?,?,?,? ,NULL ,NULL ,NULL ,0)"
+
+            db.upsert(sql_cmd,
+                      (message.message_id, message.chat.id,
+                       kuaidi100.auto_detect(message.text)[0], message.text))
+        else:
+            bot.send_message(message.chat.id, r)
     # use turing bot
     elif TURING_KEY == '':
         bot.send_chat_action(message.chat.id, 'typing')

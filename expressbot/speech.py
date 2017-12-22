@@ -1,6 +1,5 @@
 #!/usr/bin/python
 # coding:utf-8
-
 # ExpressBot - speech.py
 # 2017/12/21 21:22
 # Speech API handler
@@ -10,6 +9,7 @@ __author__ = 'Benny <benny@bennythink.com>'
 
 from pydub import AudioSegment
 import speech_recognition as sr
+import utils
 
 
 def convert(ogg_path, ogg_name):
@@ -28,9 +28,10 @@ def recognition(wav_file):
         return r.recognize_google(audio, language='cmn-Hans-CN')
 
     except sr.UnknownValueError:
-        return "Google Speech Recognition could not understand audio"
+        return utils.reply_refuse()
     except sr.RequestError as e:
-        return "Could not request results from Google Speech Recognition service; {0}".format(e)
+        print("Could not request results from Google Speech Recognition service; {0}".format(e))
+        return utils.reply_not_found()
 
 
 def voice_to_text(ogg_path, ogg_name):
