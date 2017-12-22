@@ -138,7 +138,7 @@ python main.py
 ### (6). 计划任务 ###
 如果需要追踪更新并推送，那么需要添加到计划任务中
 * systemd环境变量模式
-以Linux为例，如果你使用的是systemd环境变量模式，那么需要在`.bashrc`（假如是root用户的话）中添加如下两行（TOKEN需要自行替换）：
+以Linux为例，如果你使用的是systemd环境变量模式，那么还需要在`.bashrc`（假如是root用户的话）中添加如下两行（TOKEN需要自行替换）：
 ```
 export TOKEN='46Rmid3w5hJn2ui7wI'
 export DB_PATH='/home/ExpressBot/expressbot/bot.db'
