@@ -4,6 +4,7 @@
 # ExpressBot - yyets.py
 # 2018/1/3 11:01
 # YYeTs API
+# Python 2 only
 
 __author__ = 'Benny <benny@bennythink.com>'
 
@@ -29,22 +30,25 @@ def search_resource(name):
     """
     url = 'http://pc.zmzapi.com/index.php?g=api/pv2&m=index&a=search&accesskey=519f9cab85c8059d17544947k361a827&limit=200&k='
     r = requests.get(url + name)
-
     return r.json()
 
 
 def breaker(user_msg):
     """
-
     :param user_msg: user message
-    :return: exactly name, season and episode(none if it was movie or the whole tv)
+    :return: episode name
     """
     return user_msg[6:].lstrip(' ').rstrip(' ')
 
 
-def process():
+def process(resource_name):
+    """
+
+    :param resource_name: pure episode name
+    :return:
+    """
     # TODO: access key problem
-    name = breaker('/yyets 神盾局')
+    name = breaker(resource_name)
     search_result = search_resource(name)
 
     # get the real resource id
@@ -81,8 +85,8 @@ def process():
         choice = raw_input('choice season\n')
         try:
             choice = int(choice)
-        except ValueError as e:
-            return e
+        except ValueError:
+            return '输入错误'
 
         if choice > season_length or choice == '':
             return '输入错误'
@@ -96,43 +100,48 @@ def process():
     #    print episode_length
     choice = raw_input('choose episode\n')
 
+    all_address = ''
     if ',' in choice:
         for item in choice.split(','):
-            dl_link = dl.get('episodes')[episode_length - int(item)]
-            get_link(dl_link)
+            all_address = all_address + get_link(dl.get('episodes')[episode_length - int(item)])
     else:
         try:
             choice = int(choice)
-        except ValueError as e:
-            return e
+        except ValueError:
+            return '输入错误'
 
         if choice > episode_length or choice == '':
             return '输入错误'
         elif choice == 0:
             for i in range(episode_length):
                 c = i + 1
-                dl_link = dl.get('episodes')[episode_length - c]
-                get_link(dl_link)
+                all_address = all_address + get_link(dl.get('episodes')[episode_length - c])
         else:
-            dl_link = dl.get('episodes')[episode_length - int(choice)]
-            get_link(dl_link)
+            all_address = all_address + get_link(dl.get('episodes')[episode_length - int(choice)])
+
+    return all_address
 
 
 def get_link(dl_link):
     # HR-HDTV or MP4 or APP
     dl_hr_mp4 = dl_link.get('files').get('HR-HDTV') or dl_link.get('files').get('MP4')
     dl_app = dl_link.get('files').get('APP')
+    add = ''
     for key in dl_app:
         if key.get('way') == '104':
-            print key.get('address')
+            add = add + u'B站：' + key.get('address') + '\n'
+        elif key.get('way') == '103':
+            add = add + u'A站：' + key.get('address') + '\n'
         elif key.get('way') == '115':
-            print key.get('address')
+            add = add + u'微云：' + key.get('address') + '\n'
+
     for key in dl_hr_mp4:
         if key.get('way') == '1':
-            print key.get('address')
+            add = add + u'电驴ed2k：' + key.get('address') + '\n'
         elif key.get('way') == '2':
-            print key.get('address')
+            add = add + u'磁力链：' + key.get('address') + '\n'
+    return add
 
 
 if __name__ == '__main__':
-    print process()
+    print(process('/yyets 神盾局'))
