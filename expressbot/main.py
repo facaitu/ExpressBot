@@ -17,6 +17,7 @@ import speech
 import requests
 import db
 import time
+import yyets
 
 TOKEN = os.environ.get('TOKEN') or config.TOKEN
 TURING_KEY = os.environ.get('TURING_KEY') or config.TURING_KEY
@@ -92,6 +93,25 @@ def bot_quick_delete(message):
         msg = kuaidi100.delete(s.split()[0])
         bot.send_chat_action(message.chat.id, 'typing')
         bot.send_message(message.chat.id, msg)
+
+
+@bot.message_handler(commands=['yyets'])
+def bot_help(message):
+    message.text = ' '.join(message.text.split())
+    if 'S' in message.text and 'E' in message.text and len(message.text.split()) == 4:
+        bot.send_chat_action(message.chat.id, 'typing')
+        msg = yyets.process(message.text)
+        bot.send_message(message.chat.id, msg)
+    else:
+        bot.send_chat_action(message.chat.id, 'typing')
+        bot.send_message(message.chat.id, '输入格式有误，例：/yyets 神盾局 S01 E02')
+
+
+@bot.message_handler(commands=['query'])
+def bot_help(message):
+    bot.send_chat_action(message.chat.id, 'typing')
+    msg = yyets.query_resource(message.text)
+    bot.send_message(message.chat.id, msg)
 
 
 @bot.message_handler(content_types=['text', 'voice'])

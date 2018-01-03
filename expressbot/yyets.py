@@ -38,38 +38,44 @@ def breaker(user_msg):
     :param user_msg: user message
     :return: episode name
     """
-    return user_msg[6:].lstrip(' ').rstrip(' ')
+    user_msg = user_msg[6:].lstrip(' ').rstrip(' ')
+    # 神盾局 S01 E01,E05
+    name, season, episode = user_msg.split(' ')
+    return name, season, episode
 
 
-def process(resource_name):
-    """
-
-    :param resource_name: pure episode name
-    :return:
-    """
-    # TODO: access key problem
-    name = breaker(resource_name)
+def query_resource(user_full_message):
+    name = user_full_message[6:].lstrip(' ').rstrip(' ')
     search_result = search_resource(name)
-
-    # get the real resource id
-    choice = 0
+    msg = ''
     s = search_result.get('data')
     if s is None:
         return '没有对应的资源'
     if len(s) > 1:
-        print('choose name')
+
         for key in range(len(s)):
-            print('%d. %s %s' % (key, s[key].get('channel'), s[key].get('title')))
-        choice = raw_input('你的选择\n>')
+            msg = msg + ('%d. %s %s' % (key, s[key].get('channel'), s[key].get('title'))) + '\n'
+    return msg
 
-    try:
-        choice = int(choice)
-    except ValueError as e:
-        return e
-    if choice == '' or choice > len(s):
-        return '输入错误'
 
-    resource_id = s[choice].get('id')
+def process(user_full_message):
+    """
+
+    :param user_full_message: exact episode name, it has to be one result
+    :return:
+    """
+    # TODO: access key problem
+    name, season, episode = breaker(user_full_message)
+    season = season[1:]
+    episode = episode[1:]
+
+    search_result = search_resource(name)
+    if search_result.get('data') is None:
+        return '没有这个资源'
+    # get the real resource id
+
+    resource_id = search_result.get('data')[0].get('id')
+
     download_link = show_resource(resource_id)
     if download_link.get('status') != 1:
         return '资源关闭，AccessKey的原因？'
@@ -79,10 +85,10 @@ def process(resource_name):
     season_length = int(s[0].get('season'))
 
     if season_length == 101:
-        print('单剧')
+        # print('单剧')
         dl = s[0]
     else:
-        choice = raw_input('choice season\n')
+        choice = season
         try:
             choice = int(choice)
         except ValueError:
@@ -92,18 +98,12 @@ def process(resource_name):
             return '输入错误'
         dl = s[season_length - choice]
 
-    # choose episode
-    # 0 - all
-    # 3 - episode 3
-    # 1,5,6,7 episode 1567
     episode_length = int(dl.get('episodes')[0].get('episode'))
-    #    print episode_length
-    choice = raw_input('choose episode\n')
-
+    choice = episode
     all_address = ''
     if ',' in choice:
         for item in choice.split(','):
-            all_address = all_address + get_link(dl.get('episodes')[episode_length - int(item)])
+            all_address = all_address + u'***第%s集***\n' % int(item) + get_link(dl.get('episodes')[episode_length - int(item)])
     else:
         try:
             choice = int(choice)
@@ -115,9 +115,10 @@ def process(resource_name):
         elif choice == 0:
             for i in range(episode_length):
                 c = i + 1
-                all_address = all_address + get_link(dl.get('episodes')[episode_length - c])
+
+                all_address = all_address + u'***第%s集***\n' % c + get_link(dl.get('episodes')[episode_length - c])
         else:
-            all_address = all_address + get_link(dl.get('episodes')[episode_length - int(choice)])
+            all_address = all_address + u'***第%s集***\n' % choice + get_link(dl.get('episodes')[episode_length - int(choice)])
 
     return all_address
 
@@ -130,18 +131,21 @@ def get_link(dl_link):
     for key in dl_app:
         if key.get('way') == '104':
             add = add + u'B站：' + key.get('address') + '\n'
-        elif key.get('way') == '103':
-            add = add + u'A站：' + key.get('address') + '\n'
-        elif key.get('way') == '115':
-            add = add + u'微云：' + key.get('address') + '\n'
+        # elif key.get('way') == '103':
+        #     add = add + u'A站：' + key.get('address') + '\n'
+        # elif key.get('way') == '115':
+        #     add = add + u'微云：' + key.get('address') + '\n'
 
     for key in dl_hr_mp4:
         if key.get('way') == '1':
             add = add + u'电驴ed2k：' + key.get('address') + '\n'
-        elif key.get('way') == '2':
-            add = add + u'磁力链：' + key.get('address') + '\n'
+        elif key.get('way') == '9':
+            add = add + u'百度：' + key.get('address') + '\n'
+        # elif key.get('way') == '2':
+        #     add = add + u'磁力链：' + key.get('address') + '\n'
     return add
 
 
 if __name__ == '__main__':
-    print(process('/yyets 神盾局'))
+    print(process('/yyets 今日子 S01 E02,03'))
+    # print(query_resource('/query 今日子'))
