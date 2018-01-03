@@ -54,6 +54,12 @@ def bot_help(message):
                      如果汝的单号带有字母，请使用/start danhao123；\
                      如果汝需要一次性追踪多个单号，请/start 123,1234，使用英文半角逗号分隔。")
 
+    bot.send_message(message.chat.id,
+                     "查询美剧/日剧：/query 逃避\n"
+                     "获得S01E03链接：/yyets 神盾局 S01 E03\n"
+                     "获得S03E03,05,12链接：/yyets 神盾局 S03 E03,05,12\n"
+                     "获得S03全部链接：/yyets 神盾局 S03 E0\n")
+
 
 @bot.message_handler(commands=['list'])
 def bot_list(message):
@@ -95,8 +101,9 @@ def bot_quick_delete(message):
         bot.send_message(message.chat.id, msg)
 
 
+# TODO: Message too long
 @bot.message_handler(commands=['yyets'])
-def bot_help(message):
+def bot_yyets(message):
     message.text = ' '.join(message.text.split())
     if 'S' in message.text and 'E' in message.text and len(message.text.split()) == 4:
         bot.send_chat_action(message.chat.id, 'typing')
@@ -108,7 +115,7 @@ def bot_help(message):
 
 
 @bot.message_handler(commands=['query'])
-def bot_help(message):
+def bot_query(message):
     bot.send_chat_action(message.chat.id, 'typing')
     msg = yyets.query_resource(message.text)
     bot.send_message(message.chat.id, msg)
