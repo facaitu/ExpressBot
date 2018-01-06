@@ -236,7 +236,7 @@ sudo systemctl stop expressbot.service
 - [ ] 闹钟
 - [ ] 备忘录
 - [ ] 搜索电影（目前准备使用人人影视的接口）
-- [ ] RSS订阅（json）……这个…………？？？
+- [ ] RSS订阅（json）……这个…………？？？ ←—— 出门转左 [@RustRssBot](https://t.me/RustRssBot)
 - [ ] 下载文献的机器人？
 - [ ] SSL 证书问题
 - [ ] 添加测试用例：这玩意咋测试啊！
