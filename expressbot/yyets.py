@@ -50,8 +50,8 @@ def query_resource(user_full_message):
     search_result = search_resource(name)
     msg = ''
     s = search_result.get('data')
-    if s == '' or s is None:
-        return '没有对应的资源'
+    if s is None:
+        return '没有对应的资源，使用方法/query 逃避可耻'
     elif len(s) > 1:
 
         for key in range(len(s)):
