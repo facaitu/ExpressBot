@@ -211,6 +211,10 @@ sudo systemctl stop expressbot.service
 哦，你可能用的是 Python 3.5 吧，我也不太了解具体原因。试试 Python 2.7 或者Python 3.6吧。
 ### 查询不到结果 ###
 可能是刚刚生成单号，快递100还没有数据
+### 顺丰 ###
+目前暂时没有找到可靠的REST API的顺丰快递查询接口。
+## 查询失败 ##
+目前正打算更换快递api为快递鸟，放弃cron轮询模式。（如果有人PR那么就更好啦）
 
 ## 致谢 ##
 * [coderfox/Kuaidi100API](https://github.com/coderfox/Kuaidi100API) 快递100的原生API
