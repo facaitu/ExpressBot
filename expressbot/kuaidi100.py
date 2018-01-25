@@ -24,6 +24,8 @@ def auto_detect(tracker):
 
     try:
         r = json.loads(result).get('auto')[0].get('comCode')
+        if r == u'shunfeng':
+            pass
         return r, PROVIDER.get(r, 'Default')
     except (IndexError, ValueError):
         return False, 'Default'
@@ -63,6 +65,8 @@ def recv(code, *args):
 
     if len(db_res) == 0:
         com_code, real_com_name = auto_detect(code)
+        if com_code == u'shunfeng':
+            return u'不好意思，快递100说顺丰的接口有一点点小问题。俺会尽快调整API的。'
 
         if not com_code:
             # TODO: Is it the pythonic way?
@@ -82,6 +86,8 @@ def recv(code, *args):
             message += res.get('message')
     elif db_res[8] == 0:
         com_code, real_com_name = auto_detect(code)
+        if com_code == u'shunfeng':
+            return u'不好意思，快递100说顺丰的接口有一点点小问题。俺会尽快调整API的。'
 
         if not com_code:
             return utils.reply_not_found()

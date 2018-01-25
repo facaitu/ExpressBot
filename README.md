@@ -244,6 +244,7 @@ sudo systemctl stop expressbot.service
 - [ ] 是否需要重构`send_chat_action`来达到代码复用的目的
 - [ ] 有时会收到重复消息，原因未知
 - [ ] systemd与cron相爱相杀：真的有必要写两次吗
+- [ ] 切换到快递鸟
 
 
 ## bug fix ##
