@@ -149,8 +149,8 @@ python main.py
 仿造`bot_check.sh`创建你的文件，替换其中`TOKEN`、`DB_PATH`为你的信息并保存：
 
 然后`crontab`，添加如下
-```*/2 * * * * bash /your/path/bot_check.sh```
-即为两分钟运行一次
+```*/30 * * * * bash /your/path/bot_check.sh```
+即为30分钟运行一次
 
 **一键脚本会自动安装计划任务，位置在`/home/bot_check.sh`**
 
