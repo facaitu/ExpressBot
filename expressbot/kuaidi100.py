@@ -52,9 +52,9 @@ def recv(code, *args):
     """
     # check the undone job length and send warning if necessary.
     sql_cmd = 'SELECT track_id,message_id,chat_id,content FROM job WHERE done=?'
-
+    # recommend 4-6 hours on cron
     message = ''
-    if len(db.select(sql_cmd, (0,))) > 80:
+    if len(db.select(sql_cmd, (0,))) > 300:
         message += u'由于快递100的免费版接口存在每IP每日最高2000查询的限制，查询次数即将接近上限。\
         您的查询可能会失败\n'
 
